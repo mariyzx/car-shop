@@ -38,10 +38,27 @@ class CarController {
 
     const car = await this.service.findById(id);
     if (!car) {
-      this.res.status(404).json({ message: 'Car not found' });
+      return this.res.status(404).json({ message: 'Car not found' });
     } 
 
     this.res.status(200).json(car);
+  }
+
+  public async updateCar() {
+    const { id } = this.req.params;
+    const car = this.req.body;
+
+    if (!isValidObjectId(id)) {
+      return this.res.status(422).json({ message: 'Invalid mongo id' });
+    }
+
+    const updatedCar = await this.service.update(id, car);
+    
+    if (!updatedCar) {
+      return this.res.status(404).json({ message: 'Car not found' });
+    }
+
+    return this.res.status(200).json(updatedCar);
   }
 }
 
