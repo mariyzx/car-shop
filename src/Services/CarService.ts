@@ -2,6 +2,8 @@ import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
 
+const carODM = new CarODM();
+
 class CarService {
   private createCarDomain(car: ICar | null): Car | null {
     if (car) {
@@ -17,9 +19,21 @@ class CarService {
     } else {
       obj = { ...car };
     }
-    const carODM = new CarODM();
     const newCar = await carODM.create(obj);
     return this.createCarDomain(newCar);
+  }
+
+  public async findAll() {
+    const cars = await carODM.findAll();
+    return cars;
+  }
+
+  public async findById(id: string) {
+    const car = await carODM.findById(id);
+    if (car) {
+      return this.createCarDomain(car);
+    }
+    return null;
   }
 }
 
