@@ -39,7 +39,7 @@ class CarService {
 
   public async update(id: string, obj: ICar) {
     if (!isValidObjectId(id)) {
-      return { status: 422, response: 'Invalid mongo id' };
+      return { status: 422, response: { message: 'Invalid mongo id' } };
     }
     
     const updatedCar = await carODM.updateCar(id, obj);

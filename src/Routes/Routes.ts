@@ -19,7 +19,7 @@ routes.get(
   (req, res, next) => new CarController(req, res, next).findById(),
 );
 
-routes.patch(
+routes.put(
   '/cars/:id',
   (req, res, next) => new CarController(req, res, next).updateCar(),
 );
@@ -37,6 +37,11 @@ routes.get(
 routes.get(
   '/motorcycles/:id',
   (req, res, next) => new MotorcycleController(req, res, next).findById(),
+);
+
+routes.put(
+  '/motorcycles/:id',
+  (req, res, next) => new MotorcycleController(req, res, next).updateMotorcycle(),
 );
 
 export default routes;
