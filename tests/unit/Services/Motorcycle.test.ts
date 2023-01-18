@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { afterEach } from 'mocha';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
-import MotorcycleService from '../../../src/Services/Motocycle';
+import MotorcycleService from '../../../src/Services/Motorcycle';
 import { allMotorcycles, responseMotorcycle, responseMotorcycleWithStatusFalse, validMotorcycle, 
   validMotorcycleWithoutStatus } from '../../mocks/MotorcycleMock';
 
