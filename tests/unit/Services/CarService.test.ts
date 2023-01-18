@@ -1,67 +1,73 @@
 import { expect } from 'chai';
+import { afterEach } from 'mocha';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import CarService from '../../../src/Services/CarService';
-import { invalidCar, responseCar, validCar, validCarWithStatusFalse } from '../../mocks/CarMocks';
+import { allCars, invalidCar, responseCar, validCar, 
+  validCarWithoutStatus, validCarWithStatusFalse } from '../../mocks/CarMocks';
 
-describe('Car Service', function () {
+describe('Car Service >', function () {
   const car = new CarService();
-  describe('Fluxo normal', function () {
-    describe('Criando um carro com sucesso com todas as proprieades', function () {
-      before(function () {
-        Sinon.stub(Model, 'create').resolves(responseCar);
-      });
-  
-      it('O tipo do retorno é objeto', async function () {
-        const newCar = await car.createCar(validCar);
-        expect(newCar).to.be.an('object');
-      });
-
-      it('Deve retornar um objeto com as informações do carro', async function () {
-        const result = await car.createCar(validCar);
-
-        expect(result).to.be.deep.equal(responseCar);
-      });
-
-      after(function () {
-        Sinon.restore();
-      });
+  describe('createCar > ', function () {
+    afterEach(() => Sinon.restore());
+    
+    it('Criando carro com sucesso', async function () {
+      Sinon.stub(Model, 'create').resolves(responseCar);
+      const createdCar = await car.createCar(validCar);
+      expect(createdCar).to.be.deep.equal(responseCar);
     });
 
-    describe('Criando um carro com sucesso sem o campo status', function () {
-      it(
-        'Se tentar criar um carro sem o campo status, o mesmo é retornado como false', 
-        async function () {
-          Sinon.stub(Model, 'create').resolves(validCarWithStatusFalse);
+    it('Criando carro sem campo status', async function () {
+      Sinon.stub(Model, 'create').resolves(validCarWithStatusFalse);
 
-          const result = await car.createCar(validCar);
-
-          expect(result).to.be.deep.equal(validCarWithStatusFalse);
-        },
-      );
-
-      after(function () {
-        Sinon.restore();
-      });
-    });
-  });
-
-  describe('Fluxo de exceção', function () {
-    before(function () {
-      Sinon.stub(Model, 'create').resolves({});
+      const createdCar = await car.createCar(validCarWithoutStatus);
+      expect(createdCar).to.be.deep.equal(validCarWithStatusFalse);
     });
 
-    after(function () {
-      Sinon.restore();
-    });
-
-    it('Sem o campo model', async function () {
+    it('Não é possível criar um carro sem um campo', async function () {
       try {
         await car.createCar(invalidCar);
       } catch (error) {
-        expect((error as Error).message).to.be
-          .equal('car validation failed: model: Path `model` is required.');
+        expect((error as Error).message).to.be.equal(
+          'car validation failed: model: Path `model` is required.',
+        );
       }
+    });
+  });
+
+  describe('findAll > ', function () {
+    afterEach(() => Sinon.restore());
+
+    it('Retorna todos os carros', async function () {
+      Sinon.stub(Model, 'find').resolves(allCars);
+
+      const cars = await car.findAll();
+      expect(cars).to.be.deep.equal(allCars);
+    });
+  });
+
+  describe('findById >', function () {
+    afterEach(() => Sinon.restore());
+
+    it('Retorna o carro com id especificado', async function () {
+      Sinon.stub(Model, 'findById').resolves(responseCar);
+
+      const specificCar = await car.findById('63c2e9650051c25a51753e0c');
+      expect(specificCar).to.be.deep.equal(responseCar);
+    });
+
+    it('Não é possível retornar o carro com um id inválido', async function () {
+      Sinon.stub(Model, 'findById').resolves(null);
+
+      const specificCar = await car.findById('invalid');
+      expect(specificCar).to.be.deep.equal(null);
+    });
+
+    it('Não é possível retornar o carro com id inexistente', async function () {
+      Sinon.stub(Model, 'findById').resolves(null);
+
+      const specificCar = await car.findById('63c2e9650111c25a51753e0c');
+      expect(specificCar).to.be.deep.equal(null);
     });
   });
 });
