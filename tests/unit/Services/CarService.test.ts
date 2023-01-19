@@ -86,11 +86,27 @@ describe('Car Service >', function () {
     it('Atualizando um carro com sucesso', async function () {
       sinon.stub(Model, 'findByIdAndUpdate').resolves(responseCarUpdated);
 
+      const updatedCar = await car.update('63c2e9650051c25a51753e0c', updateInfo);
+      expect(updatedCar.response).to.be.deep.equal(responseCarUpdated);
+    });
+
+    it('Não é possível atualizar um carro com id inválido', async function () {
+      sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+
       try {
-        const updatedCar = await car.update('63c2e9650051c25a51753e0c', updateInfo);
-        expect(updatedCar).to.be.deep.equal(responseCarUpdated);
+        await car.update('invalid', updateInfo);
       } catch (error) {
-        console.log(error);
+        expect((error as Error).message).to.be.deep.equal('Invalid mongo id');
+      }
+    });
+
+    it('Não é possível atualizar um carro com um id inexistente', async function () {
+      sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+
+      try {
+        await car.update('invalid', updateInfo);
+      } catch (error) {
+        expect((error as Error).message).to.be.deep.equal('Car not found!');
       }
     });
   });

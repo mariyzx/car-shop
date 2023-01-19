@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { isValidObjectId } from 'mongoose';
-import MotorcycleService from '../Services/Motorcycle';
+import MotorcycleService from '../Services/MotorcycleService';
 
 class MotorcycleController {
   private req: Request;
