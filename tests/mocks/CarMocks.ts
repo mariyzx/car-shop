@@ -33,6 +33,17 @@ export const responseCar: ICar = {
   ...validCar,
 };
 
+export const updateInfo: ICar = {
+  ...validCar,
+  color: 'Green',
+};
+
+export const responseCarUpdated: ICar = {
+  id: '63c2e9650051c25a51753e0c',
+  ...validCar,
+  color: 'Green',
+};
+
 export const validCarWithStatusFalse: ICar = {
   ...responseCar,
   status: false,

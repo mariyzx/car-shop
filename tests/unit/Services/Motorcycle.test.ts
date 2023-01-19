@@ -3,7 +3,9 @@ import { afterEach } from 'mocha';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import MotorcycleService from '../../../src/Services/Motorcycle';
-import { allMotorcycles, responseMotorcycle, responseMotorcycleWithStatusFalse, validMotorcycle, 
+import { allMotorcycles, motorcycleUpdate, responseMotorcycle, 
+  responseMotorcycleWithStatusFalse, validMotorcycle, 
+  validMotorcycleUpdated, 
   validMotorcycleWithoutStatus } from '../../mocks/MotorcycleMock';
 
 describe('Motorcycle Service > ', function () {
@@ -57,6 +59,39 @@ describe('Motorcycle Service > ', function () {
 
       const moto = await motorcycle.findById('634852326b35b59438fbea2e');
       expect(moto).to.be.deep.equal(null);
+    });
+  });
+
+  describe('updateMotorcycle >', function () {
+    afterEach(() => Sinon.restore());
+
+    it('Atualizando uma moto com sucesso', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(validMotorcycleUpdated);
+
+      const motorcycleUpdated = await motorcycle
+        .updateMotorcycle('634852326b35b59438fbea2f', motorcycleUpdate);
+      expect(motorcycleUpdated.response).to.be.deep.equal(validMotorcycleUpdated);
+    });
+
+    it('Não é possível atualizar uma moto com um id inválido', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+
+      try {
+        await motorcycle.updateMotorcycle('invalid', motorcycleUpdate);
+      } catch (error) {
+        expect((error as Error).message).to.be.deep.equal('Invalid mongo id');
+      }
+    });
+
+    it('Não é possível atualizar uma moto com um id inexistente', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+
+      try {
+        await motorcycle
+          .updateMotorcycle('634852326b35b59438fbea3v', motorcycleUpdate);
+      } catch (error) {
+        expect((error as Error).message).to.be.deep.equal('Invalid mongo id');
+      }
     });
   });
 });

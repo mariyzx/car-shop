@@ -42,3 +42,13 @@ export const allMotorcycles = [
     engineCapacity: 125,
   },
 ];
+
+export const motorcycleUpdate = {
+  ...validMotorcycle,
+  color: 'Green',
+};
+
+export const validMotorcycleUpdated = {
+  id: '634852326b35b59438fbea2f',
+  ...motorcycleUpdate,
+};

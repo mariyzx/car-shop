@@ -1,24 +1,35 @@
 import { expect } from 'chai';
 import { afterEach } from 'mocha';
 import { Model } from 'mongoose';
-import Sinon from 'sinon';
+import sinon from 'sinon';
 import CarService from '../../../src/Services/CarService';
-import { allCars, invalidCar, responseCar, validCar, 
-  validCarWithoutStatus, validCarWithStatusFalse } from '../../mocks/CarMocks';
+import {
+  allCars,
+  invalidCar,
+  responseCar,
+  responseCarUpdated,
+  updateInfo,
+  validCar, 
+  validCarWithoutStatus,
+  validCarWithStatusFalse,
+} from '../../mocks/CarMocks';
 
 describe('Car Service >', function () {
+  afterEach(() => sinon.restore());
+
   const car = new CarService();
+
   describe('createCar > ', function () {
-    afterEach(() => Sinon.restore());
+    afterEach(() => sinon.restore());
     
     it('Criando carro com sucesso', async function () {
-      Sinon.stub(Model, 'create').resolves(responseCar);
+      sinon.stub(Model, 'create').resolves(responseCar);
       const createdCar = await car.createCar(validCar);
       expect(createdCar).to.be.deep.equal(responseCar);
     });
 
     it('Criando carro sem campo status', async function () {
-      Sinon.stub(Model, 'create').resolves(validCarWithStatusFalse);
+      sinon.stub(Model, 'create').resolves(validCarWithStatusFalse);
 
       const createdCar = await car.createCar(validCarWithoutStatus);
       expect(createdCar).to.be.deep.equal(validCarWithStatusFalse);
@@ -36,10 +47,10 @@ describe('Car Service >', function () {
   });
 
   describe('findAll > ', function () {
-    afterEach(() => Sinon.restore());
+    afterEach(() => sinon.restore());
 
     it('Retorna todos os carros', async function () {
-      Sinon.stub(Model, 'find').resolves(allCars);
+      sinon.stub(Model, 'find').resolves(allCars);
 
       const cars = await car.findAll();
       expect(cars).to.be.deep.equal(allCars);
@@ -47,27 +58,40 @@ describe('Car Service >', function () {
   });
 
   describe('findById >', function () {
-    afterEach(() => Sinon.restore());
+    afterEach(() => sinon.restore());
 
     it('Retorna o carro com id especificado', async function () {
-      Sinon.stub(Model, 'findById').resolves(responseCar);
+      sinon.stub(Model, 'findById').resolves(responseCar);
 
       const specificCar = await car.findById('63c2e9650051c25a51753e0c');
       expect(specificCar).to.be.deep.equal(responseCar);
     });
 
     it('Não é possível retornar o carro com um id inválido', async function () {
-      Sinon.stub(Model, 'findById').resolves(null);
+      sinon.stub(Model, 'findById').resolves(null);
 
       const specificCar = await car.findById('invalid');
       expect(specificCar).to.be.deep.equal(null);
     });
 
     it('Não é possível retornar o carro com id inexistente', async function () {
-      Sinon.stub(Model, 'findById').resolves(null);
+      sinon.stub(Model, 'findById').resolves(null);
 
       const specificCar = await car.findById('63c2e9650111c25a51753e0c');
       expect(specificCar).to.be.deep.equal(null);
+    });
+  });
+
+  describe('update > ', function () {
+    it('Atualizando um carro com sucesso', async function () {
+      sinon.stub(Model, 'findByIdAndUpdate').resolves(responseCarUpdated);
+
+      try {
+        const updatedCar = await car.update('63c2e9650051c25a51753e0c', updateInfo);
+        expect(updatedCar).to.be.deep.equal(responseCarUpdated);
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 });
