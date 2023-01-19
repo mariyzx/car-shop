@@ -47,8 +47,6 @@ describe('Car Service >', function () {
   });
 
   describe('findAll > ', function () {
-    afterEach(() => sinon.restore());
-
     it('Retorna todos os carros', async function () {
       sinon.stub(Model, 'find').resolves(allCars);
 
