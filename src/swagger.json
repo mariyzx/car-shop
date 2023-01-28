@@ -1,0 +1,642 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Car Shop",
+    "description": "API desenvolvida para uma concessionária.",
+    "contact": {
+      "email": "marinhomariana8@gmail.com",
+      "name": "Mariana Werneck"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {"url": "https://localhost:3001"}
+  ],
+  "tags": [
+    { "name": "cars",
+      "description": "Endpoint para os carros"},
+    { "name": "motorcycles",
+      "description": "Endpoint para as motocicletas"}
+  ],
+  "paths": {
+    "/cars": {
+      "post": {
+        "tags": ["cars"],
+        "summary": "Responsável por cadastrar um carro no banco de dados",
+        "requestBody": {
+          "description": "Informações do carro",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "Marea"
+                  },
+                  "year": {
+                    "type": "number",
+                    "example": 2002
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "Verde"
+                  },
+                  "buyValue": {
+                    "type": "number",
+                    "example": 10000
+                  },
+                  "doorsQty": {
+                    "type": "number",
+                    "example": 4
+                  },
+                  "seatsQty": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                },
+                "example": {
+                  "model": "Marea",
+                  "year": 1960,
+                  "color": "Red",
+                  "status": true,
+                  "buyValue": 1500,
+                  "doorsQty": 2,
+                  "seatsQty": 2
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Carro cadastrado com sucesso - retorna as informações",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "63c2e9650051c25a2658e0c"
+                    },
+                    "model": {
+                      "type": "string",
+                      "example": "Marea"
+                    },
+                    "year": {
+                      "type": "number",
+                      "example": 2002
+                    },
+                    "color": {
+                      "type": "string",
+                      "example": "Verde"
+                    },
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "buyValue": {
+                      "type": "number",
+                      "example": 10000
+                    },
+                    "doorsQty": {
+                      "type": "number",
+                      "example": 4
+                    },
+                    "seatsQty": {
+                      "type": "number",
+                      "example": 5
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao cadastrar carro sem um campo model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "car validation failed: model: Path `model` is required."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["cars"],
+        "summary": "Retorna todos os carros",
+        "responses": {
+          "200": {
+            "description": "Lista de carros",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cars"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cars/{carId}": {
+      "put": {
+        "tags": ["cars"],
+        "summary": "Responsável por editar informações de um carro",
+        "parameters": [{
+          "in": "path",
+          "name": "carId",
+          "description": "ID do carro",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "63c2e9650051c25a51753e0c"
+        }],
+        "requestBody": {
+          "description": "Informações do carro",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "Marea"
+                  },
+                  "year": {
+                    "type": "number",
+                    "example": 2002
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "Verde"
+                  },
+                  "buyValue": {
+                    "type": "number",
+                    "example": 10000
+                  },
+                  "doorsQty": {
+                    "type": "number",
+                    "example": 4
+                  },
+                  "seatsQty": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Retorna o carro com as informações editadas",
+            "content": {
+              "application/json": {
+                "example": {
+                    "id": "63c2e9650051c25a2658e0c",
+                    "model": "Marea",
+                    "year": 2002,
+                    "color": "Black",
+                    "status": true,
+                    "buyValue": 15.990,
+                    "doorsQty": 4,
+                    "seatsQty": 5
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Retorna mensagem de erro caso o carro com o id não exista",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Car not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Retorna mensagem de erro caso o id seja inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid mongo id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["cars"],
+        "summary": "Retorna um carro com id específico",
+        "parameters": [{
+          "in": "path",
+          "name": "carId",
+          "description": "ID do carro",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "63c2e9650051c25a51753e0c"
+        }],
+        "responses": {
+          "200": {
+            "description": "Retorna o carro",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cars"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Retorna mensagem de erro caso o carro com o id não exista",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Car not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Retorna mensagem de erro caso o id seja inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid mongo id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/motorcycles": {
+      "post": {
+        "tags": ["motorcycles"],
+        "summary": "Responsável por cadastrar uma moto no banco de dados",
+        "requestBody": {
+          "description": "Informações da moto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "Honda CG Titan 125"
+                  },
+                  "year": {
+                    "type": "number",
+                    "example": 1983
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "Vermelho"
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "buyValue": {
+                    "type": "number",
+                    "example": 1000
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Street"
+                  },
+                  "engineCapacity": {
+                    "type": "number",
+                    "example": 125
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cadastra a moto com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "634852326b35b59438fbea2f"
+                    },
+                    "model": {
+                      "type": "string",
+                      "example": "Honda CG Titan 125"
+                    },
+                    "year": {
+                      "type": "number",
+                      "example": 1983
+                    },
+                    "color": {
+                      "type": "string",
+                      "example": "Vermelho"
+                    },
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "buyValue": {
+                      "type": "number",
+                      "example": 1000
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "Street"
+                    },
+                    "engineCapacity": {
+                      "type": "number",
+                      "example": 125
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao cadastrar moto sem um campo model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "motorcycle validation failed: model: Path `model` is required."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["motorcycles"],
+        "summary": "Retorna todos as motos",
+        "responses": {
+          "200": {
+            "description": "Lista de motos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Motorcycles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/motorcycles/{motorcycleId}": {
+      "put": {
+        "tags": ["motorcycles"],
+        "summary": "Responsável por editar informações de uma moto",
+        "parameters": [{
+          "in": "path",
+          "name": "motorcycleId",
+          "description": "ID da moto",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "634852326b35b59438fbea2f"
+        }],
+        "requestBody": {
+          "description": "Informações da moto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "Honda CG Titan 125"
+                  },
+                  "year": {
+                    "type": "number",
+                    "example": 1983
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "Verde"
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "buyValue": {
+                    "type": "number",
+                    "example": 1000
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Street"
+                  },
+                  "engineCapacity": {
+                    "type": "number",
+                    "example": 125
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Retorna a moto com as informações editadas",
+            "content": {
+              "application/json": {
+                "example":  {
+                  "id": "634852326b35b59438fbea2f",
+                  "model": "Honda CG Titan 125",
+                  "year": 1983,
+                  "color": "Verde",
+                  "status": true,
+                  "buyValue": 1000,
+                  "category": "Street",
+                  "engineCapacity": 125
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Retorna mensagem de erro caso a moto com o id não exista",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Motorcycle not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Retorna mensagem de erro caso o id seja inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid mongo id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["motorcycles"],
+        "summary": "Retorna a moto",
+        "parameters": [{
+          "in": "path",
+          "name": "motorcycleId",
+          "description": "ID da moto",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "634852326b35b59438fbea2f"
+        }],
+        "responses": {
+          "200": {
+            "description": "Retorna a moto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Motorcycles"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Retorna mensagem de erro caso a moto com o id não exista",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Motorcycle not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Retorna mensagem de erro caso o id seja inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid mongo id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Cars": {
+        "required": ["model", "year", "color", "buyValue", "doorsQty", "seatsQty", "status"],
+        "type": "array",
+        "items": {
+          "properties": {
+            "model": {"type":"string", "example": "Marea"},
+            "year": {"type": "number", "example": 2002},
+            "color": {"type": "string", "example": "Verde"},
+            "buyValue": {"type": "number", "example": 10000},
+            "doorsQty": {"type": "number", "example": 4},
+            "seatsQty": {"type": "number", "example": 5}
+          }
+        }
+      },
+      "Motorcycles": {
+        "required": ["model", "year", "color", "buyValue", "category", "engineCapacity"],
+        "type": "array",
+        "items": {
+          "properties": {
+            "model": {"type":"string", "example": "Honda CG Titan 125"},
+            "year": {"type": "number", "example": 1983},
+            "color": {"type": "string", "example": "Vermelho"},
+            "buyValue": {"type": "number", "example": 1000},
+            "category": {"type": "string", "example": "Street"},
+            "engineCapacity": {"type": "number", "example": 125}
+          }
+        }
+      }
+    }
+  }
+}

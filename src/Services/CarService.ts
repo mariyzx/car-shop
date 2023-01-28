@@ -47,7 +47,7 @@ class CarService {
     if (!updatedCar) {
       return { status: 404, response: { message: 'Car not found' } };
     }
-    return { status: 200, response: this.createCarDomain(updatedCar) };
+    return { status: 201, response: this.createCarDomain(updatedCar) };
   }
 }
 
