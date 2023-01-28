@@ -40,6 +40,10 @@ Clone o repositório: `git@github.com:mariyzx/car-shop.git`.
   <br>  
 </details>
 
+## Rotas:
+
+O projeto está rodando na porta `3001`, ao acessar o endpoint `/docs` irá encontrar a documentação de rotas da API!
+
 ## Tecnologias utilizadas:
 
 - Typescript
